@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PlayerStatsAPI.Entities;
+using PlayerStatsAPI.Middleware;
 using PlayerStatsAPI.Migrations;
 using PlayerStatsAPI.Services;
 using System;
@@ -33,6 +34,9 @@ namespace PlayerStatsAPI
             services.AddScoped<PlayerStatsSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
+            services.AddScoped<ErrorHandlingMiddleware>();
+            services.AddScoped<RequestTimeMiddleware>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,8 +47,16 @@ namespace PlayerStatsAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<RequestTimeMiddleware>();
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlayerStats API");
+            });
 
             app.UseRouting();
             
