@@ -9,4 +9,9 @@ An application for summing up the time spent in games, currently only database a
 - Dto 
 - Entity creation 
 - Query validation
-- Site controller refactor,
+- Site controller refactor
+- Config Logger(NLog)
+- Error handling
+- Custom Error API
+- Documentation with the swagger tool
+- Request Time Log (>5)
