@@ -3,7 +3,7 @@ An application for summing up the time spent in games, currently only database a
 
 
 ### Technology:
-#### ASP-NET Core:
+#### ASP-NET Core 5:
 - retrieving-resources
 - Mapping to models (automaper)
 - Dto 
