@@ -15,12 +15,11 @@ namespace PlayerStatsAPI.Services
 {
     public interface IPlayerStatsService
     {
-        int CreateGame(CreateGameDto dto);
-        int CreatePlayerStats(CreatePlayerStatsDto dto);
-        int CreateUser(CreateUserDto dto);
+        
+        int Create(CreatePlayerStatsDto dto);
+        public void Delete(int id);
         IEnumerable<PlayerStatsDto> GetAll();
         PlayerStatsDto GetById(int id);
-        void DeleteGame(int id);
         void Update(int id, UpdatePlayerStatsDto dto);
     }
 
@@ -59,37 +58,22 @@ namespace PlayerStatsAPI.Services
 
             return playerStatsDto;
         }
-        public int CreatePlayerStats(CreatePlayerStatsDto dto)
+        public int Create(CreatePlayerStatsDto dto)
         {
             var playerStats = _mapper.Map<PlayerStats>(dto);
+            var user = _dbContext.User.FirstOrDefault(r => r.Id == playerStats.UserId);
+            if (user is null)
+                throw new NotFoundException("User Id not found");
+            var game = _dbContext.Game.FirstOrDefault(r => r.Id == playerStats.GameId);
+            if (game is null)
+                throw new NotFoundException("Game Id not found");
+
             _dbContext.PlayerStats.Add(playerStats);
             _dbContext.SaveChanges();
             return playerStats.Id;
         }
-        public int CreateUser(CreateUserDto dto)
-        {
-            var user = _mapper.Map<User>(dto);
-            _dbContext.User.Add(user);
-            _dbContext.SaveChanges();
-            return user.Id;
-        }
-        public int CreateGame(CreateGameDto dto)
-        {
-            var game = _mapper.Map<Game>(dto);
-            _dbContext.Game.Add(game);
-            _dbContext.SaveChanges();
-            return game.Id;
-        }
-        public void DeleteGame(int id)
-        {
-            _logger.LogError($"Game with id: {id} Delete action invoked");
-            var game = _dbContext
-                .Game
-                .FirstOrDefault(r => r.Id == id);
-            if (game is null) throw new NotFoundException("Game not found");
-            _dbContext.Game.Remove(game);
-            _dbContext.SaveChanges();
-        }
+        
+        
         public void Update(int id, UpdatePlayerStatsDto dto)
         {
             var playerStats = _dbContext
@@ -103,6 +87,16 @@ namespace PlayerStatsAPI.Services
 
             _dbContext.SaveChanges();
 
+        }
+        public void Delete(int id)
+        {
+            _logger.LogError($"PlayerStats with id: {id} Delete action invoked");
+            var playerStats = _dbContext
+                .PlayerStats
+                .FirstOrDefault(r => r.Id == id);
+            if (playerStats is null) throw new NotFoundException("PlayerStats not found");
+            _dbContext.PlayerStats.Remove(playerStats);
+            _dbContext.SaveChanges();
         }
     }
 }

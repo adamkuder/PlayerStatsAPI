@@ -21,6 +21,10 @@ namespace PlayerStatsAPI
 
             CreateMap<Game, GameDto>();
 
+            CreateMap<User, UserDto>();
+
+            CreateMap<PlayerStats, PlayerStatsByUserDto>().ForMember(m => m.UserId, c => c.MapFrom(s => s.User.Id));
+
             CreateMap<CreateGameDto, Game>()
                 .ForMember(r => r.Category, c => c.MapFrom(dto => new Category() { Name = dto.CategoryName }));
 

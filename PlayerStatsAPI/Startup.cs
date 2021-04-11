@@ -34,6 +34,9 @@ namespace PlayerStatsAPI
             services.AddScoped<PlayerStatsSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IPlayerStatsService, PlayerStatsService>();
+            services.AddScoped<IGameService, GameService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<RequestTimeMiddleware>();
             services.AddSwaggerGen();

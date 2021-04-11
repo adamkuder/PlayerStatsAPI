@@ -7,16 +7,11 @@ using System.Threading.Tasks;
 
 namespace PlayerStatsAPI.Models
 {
-    public class CreateUserDto
+    public class CreateCategoryDto
     {
         public int Id { get; set; }
         [Required]
         [MaxLength(25)]
         public string Name { get; set; }
-        [Required]
-        [EmailAddress]
-        public string EmailAddress { get; set; }
-        [Required]
-        public string Password { get; set; }
     }
 }

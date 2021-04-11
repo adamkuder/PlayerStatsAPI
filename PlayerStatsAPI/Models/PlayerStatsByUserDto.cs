@@ -1,5 +1,4 @@
-﻿using PlayerStatsAPI.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace PlayerStatsAPI.Models
 {
-    public class CreatePlayerStatsDto
+    public class PlayerStatsByUserDto
     {
+        //public int Id { get; set; }
         public double Hours { get; set; }
-        
         public int UserId { get; set; }
-        
-        public int GameId { get; set; }
+        //public int GameId { get; set; }
     }
 }

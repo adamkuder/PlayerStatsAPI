@@ -17,8 +17,6 @@ namespace PlayerStatsAPI.Controllers
     [ApiController]
     public class PlayerStatsController : ControllerBase
     {
-        private readonly PlayerStatsDbContext _dbContext;
-        private readonly IMapper _mapper;
         private readonly IPlayerStatsService _playerStatsService;
 
         public PlayerStatsController(IPlayerStatsService playerStatsService)
@@ -26,37 +24,21 @@ namespace PlayerStatsAPI.Controllers
             _playerStatsService = playerStatsService;
         }
 
-        [HttpPost]
-        [Route("Game")]
-        public ActionResult CreateGame([FromBody]CreateGameDto dto)
-        {
-            var id = _playerStatsService.CreateGame(dto);
-
-            return Created($"/api/playerStats/Game/{id}", null);
-        }
+        
 
         [HttpPost]
-        [Route("User")]
-        public ActionResult CreateUser([FromBody] CreateUserDto dto)
+        public ActionResult Create([FromBody] CreatePlayerStatsDto dto)
         {
-            var id = _playerStatsService.CreateUser(dto);
-
-            return Created($"/api/PlayerStats/User/{id}", null);
-        }
-
-        [HttpPost]
-        public ActionResult CreatePlayerStats([FromBody] CreatePlayerStatsDto dto)
-        {
-            var id = _playerStatsService.CreatePlayerStats(dto);
+            var id = _playerStatsService.Create(dto);
 
             return Created($"/api/PlayerStats/{id}", null);
         }
 
         [HttpDelete("{id}")]
         //[Route("Game")]
-        public ActionResult DeleteGame([FromRoute] int id)
+        public ActionResult Delete([FromRoute] int id)
         {
-            _playerStatsService.DeleteGame(id);
+            _playerStatsService.Delete(id);
 
             return NotFound();
         }
