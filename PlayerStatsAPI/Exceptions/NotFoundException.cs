@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayerStatsAPI.Exceptions
+namespace PlayerStatsAPI.Expression
 {
     public class NotFoundException : Exception
     {

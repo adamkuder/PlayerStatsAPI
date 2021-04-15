@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlayerStatsAPI.Entities;
 
 namespace PlayerStatsAPI.Migrations
 {
     [DbContext(typeof(PlayerStatsDbContext))]
-    partial class PlayerStatsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210412180528_UpdateUser")]
+    partial class UpdateUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,7 +124,8 @@ namespace PlayerStatsAPI.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");

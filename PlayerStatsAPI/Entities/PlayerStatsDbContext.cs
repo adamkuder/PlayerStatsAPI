@@ -14,12 +14,14 @@ namespace PlayerStatsAPI.Entities
         public DbSet<User> User { get; set; }
         public DbSet<Game> Game { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Role> Role { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().Property(r => r.Name).IsRequired().HasMaxLength(25);
-            modelBuilder.Entity<User>().Property(r => r.Password).IsRequired().HasMaxLength(25);
+            modelBuilder.Entity<User>().Property(r => r.Password).IsRequired();
             modelBuilder.Entity<User>().Property(r => r.EmailAddress).IsRequired();
+            modelBuilder.Entity<Role>().Property(r => r.Name).IsRequired();
             modelBuilder.Entity<Game>().Property(r => r.Name).IsRequired().HasMaxLength(25);
             modelBuilder.Entity<Category>().Property(r => r.Name).IsRequired();
         }

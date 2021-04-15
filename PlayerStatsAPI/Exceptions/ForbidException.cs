@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace PlayerStatsAPI.Expression
 {
-    public class ValueExistsException : Exception
+    public class ForbidException : Exception
     {
-        public ValueExistsException(string message) : base(message)
-        {
-
-        }
+  
     }
 }

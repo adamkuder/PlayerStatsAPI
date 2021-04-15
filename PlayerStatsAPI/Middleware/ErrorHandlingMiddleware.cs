@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using PlayerStatsAPI.Exceptions;
+using PlayerStatsAPI.Expression;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +22,16 @@ namespace PlayerStatsAPI.Middleware
             try
             {
                 await next.Invoke(context);
+            }
+            catch(ForbidException forbidException)
+            {
+                context.Response.StatusCode = 403;
+                //await context.Response.WriteAsync(forbidException.Message);
+            }
+            catch(BadRequestException badRequestException)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(badRequestException.Message);
             }
             catch(NotFoundException notFoundException)
             {

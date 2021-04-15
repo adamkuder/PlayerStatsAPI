@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlayerStatsAPI.Entities
+namespace PlayerStatsAPI.Models
 {
-    public class Category
+    public class CategoryGameDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public virtual List<Game> Games { get; set; }
     }
 }

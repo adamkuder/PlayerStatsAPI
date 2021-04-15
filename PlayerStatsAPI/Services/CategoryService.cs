@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PlayerStatsAPI.Entities;
-using PlayerStatsAPI.Exceptions;
+using PlayerStatsAPI.Expression;
 using PlayerStatsAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace PlayerStatsAPI.Services
     {
         int Create(string name, CreateCategoryDto dto);
         void Delete(int id);
+        CategoryDto GetById(int id);
+        IEnumerable<CategoryDto> GetAll();
     }
     public class CategoryService : ICategoryService
     {
@@ -45,6 +48,29 @@ namespace PlayerStatsAPI.Services
         public void Delete(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<CategoryDto> GetAll()
+        {
+            var category = _dbContext
+               .Category
+               .Include(r => r.Games)
+               .ToList();
+            var categoryDto = _mapper.Map<List<CategoryDto>>(category);
+
+
+            return categoryDto;
+        }
+
+        public CategoryDto GetById(int id)
+        {
+            var category = _dbContext
+               .Category
+               .Include(r => r.Games)
+               .FirstOrDefault(r => r.Id == id);
+            if (category is null) throw new NotFoundException("Playerstats not found");
+            var result = _mapper.Map<CategoryDto>(category);
+            return result;
         }
     }
 }

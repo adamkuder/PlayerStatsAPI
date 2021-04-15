@@ -26,5 +26,12 @@ namespace PlayerStatsAPI.Controllers
 
             return Created($"/api/Game/{id}", null);
         }
+        [HttpGet]
+        public ActionResult<IEnumerable<GameDto>> GetAll([FromQuery] PlayerStatsQuery query)
+        {
+            var playerStatsDto = _gameService.GetAll(query);
+
+            return Ok(playerStatsDto);
+        }
     }
 }

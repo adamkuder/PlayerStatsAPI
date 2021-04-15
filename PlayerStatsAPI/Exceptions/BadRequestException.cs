@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PlayerStatsAPI.Expression
 {
-    public class ValueExistsException : Exception
+    public class BadRequestException :Exception
     {
-        public ValueExistsException(string message) : base(message)
+        public BadRequestException(string message) : base(message)
         {
 
         }

@@ -19,12 +19,19 @@ namespace PlayerStatsAPI.Controllers
         {
             _userService = userService;
         }
-        [HttpPost]
+        [HttpPost("register")]
         public ActionResult Create([FromBody] CreateUserDto dto)
         {
-            var id = _userService.Create(dto);
+            _userService.Create(dto);
 
-            return Created($"/api/User/{id}", null);
+            return Ok();
+        }
+        [HttpPost("login")]
+        public ActionResult Login([FromBody]LoginDto dto)
+        {
+            string token = _userService.GenerateJwt(dto);
+            
+            return Ok(token);
         }
         [HttpGet("{userId}")]
         public ActionResult<UserDto> Get([FromRoute] int userId)
@@ -34,9 +41,9 @@ namespace PlayerStatsAPI.Controllers
             return Ok(user);
         }
         [HttpGet]
-        public ActionResult<IEnumerable<UserDto>> GetAll()
+        public ActionResult<IEnumerable<UserDto>> GetAll(string searchPhrase)
         {
-            IEnumerable<UserDto> user = _userService.GetAll();
+            IEnumerable<UserDto> user = _userService.GetAll(searchPhrase);
 
             return Ok(user);
         }

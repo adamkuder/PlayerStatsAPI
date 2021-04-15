@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PlayerStatsAPI.Authorization;
 using PlayerStatsAPI.Controllers.Models;
 using PlayerStatsAPI.Entities;
-using PlayerStatsAPI.Exceptions;
+using PlayerStatsAPI.Expression;
 using PlayerStatsAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +23,7 @@ namespace PlayerStatsAPI.Services
         public void Delete(int id);
         IEnumerable<PlayerStatsDto> GetAll();
         PlayerStatsDto GetById(int id);
-        void Update(int id, UpdatePlayerStatsDto dto);
+        void Update(int id, UpdatePlayerStatsDto dto, ClaimsPrincipal user);
     }
 
     public class PlayerStatsService : IPlayerStatsService
@@ -28,12 +31,17 @@ namespace PlayerStatsAPI.Services
         private readonly PlayerStatsDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<PlayerStatsService> _logger;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserContextService _userContextService;
 
-        public PlayerStatsService(PlayerStatsDbContext dbContext, IMapper mapper, ILogger<PlayerStatsService> logger)
+        public PlayerStatsService(PlayerStatsDbContext dbContext, IMapper mapper, ILogger<PlayerStatsService> logger,
+            IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
+            _userContextService = userContextService;
         }
         public PlayerStatsDto GetById(int id)
         {
@@ -61,7 +69,8 @@ namespace PlayerStatsAPI.Services
         public int Create(CreatePlayerStatsDto dto)
         {
             var playerStats = _mapper.Map<PlayerStats>(dto);
-            var user = _dbContext.User.FirstOrDefault(r => r.Id == playerStats.UserId);
+            var user = _dbContext.User.FirstOrDefault(r => r.Id == _userContextService.GetUserId);
+            
             if (user is null)
                 throw new NotFoundException("User Id not found");
             var game = _dbContext.Game.FirstOrDefault(r => r.Id == playerStats.GameId);
@@ -74,12 +83,19 @@ namespace PlayerStatsAPI.Services
         }
         
         
-        public void Update(int id, UpdatePlayerStatsDto dto)
-        {
+        public void Update(int id, UpdatePlayerStatsDto dto, ClaimsPrincipal user)
+        {            
             var playerStats = _dbContext
                 .PlayerStats
                 .FirstOrDefault(r => r.Id == id);
             if (playerStats is null) throw new NotFoundException("PlayerStats not found");
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, playerStats, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+            if(!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             playerStats.Hours = dto.Hours;
             playerStats.UserId = dto.UserId;
