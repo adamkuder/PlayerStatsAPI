@@ -30,7 +30,7 @@ An application for summing up the time spent in games, currently only database a
 - Validation query
 - Sort Result
 ### Future:
-- Upload Azure (Deadline 18.04.2021)
+- Upload Azure 
 - Download user public data from: Steam, Origin.
 - Sum PlayTime
 - FrontEnd???
